@@ -34,10 +34,15 @@ fun Application.module() {
         }
 
         get("/") {
-            call.respondText { "I'm Mary Poppins Y'All!" }
+            call.respond(FreeMarkerContent("index.ftl", mapOf<String, Int>()))
         }
+
         get("/some-stuff"){
             call.respond(FreeMarkerContent("someStuff.ftl", mapOf("data" to IndexData(listOf(1, 2, 3))), ""))
+        }
+
+        get("/texty") {
+            call.respondText { "I'm Mary Poppins Y'All!" }
         }
     }
 }
