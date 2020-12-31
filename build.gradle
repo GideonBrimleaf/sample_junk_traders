@@ -27,6 +27,7 @@ repositories {
     jcenter()
     maven { url 'https://kotlin.bintray.com/ktor' }
     maven { url 'https://kotlin.bintray.com/kotlin-js-wrappers' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -40,5 +41,7 @@ dependencies {
     implementation "io.ktor:ktor-server-host-common:$ktor_version"
     implementation "io.ktor:ktor-server-sessions:$ktor_version"
     implementation "io.ktor:ktor-auth:$ktor_version"
+    implementation "com.github.kwebio:kweb-core:0.8.5"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }

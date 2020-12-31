@@ -16,6 +16,13 @@ import io.ktor.http.content.*
 import io.ktor.sessions.*
 import io.ktor.features.*
 import io.ktor.auth.*
+import io.ktor.http.cio.websocket.*
+import io.ktor.websocket.*
+import kweb.*
+import kweb.state.KVar
+import kweb.state.render
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -27,6 +34,13 @@ fun Application.module() {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
 
+    install(WebSockets) {
+        pingPeriod = java.time.Duration.ofSeconds(10)
+        timeout = java.time.Duration.ofSeconds(30)
+    }
+
+    install(Kweb)
+
     routing(){
 
         static("/static") {
@@ -35,6 +49,25 @@ fun Application.module() {
 
         get("/") {
             call.respond(FreeMarkerContent("index.ftl", mapOf<String, Int>()))
+        }
+
+        get("/kweb") {
+            call.respondKweb {
+                doc.body {
+                    h1().text("I'm Mary Poppins Y'All!")
+                    p().text("What is your name?")
+                    val textField = input()
+                    val name = KVar("")
+                    textField.value = name
+                    render(name) {
+                        if (name.value == "") {
+                            p().text("Enter a name")
+                        } else {
+                            p().text(name.map { "Hello $it" })
+                        }
+                    }
+                }
+            }
         }
 
         get("/some-stuff"){
