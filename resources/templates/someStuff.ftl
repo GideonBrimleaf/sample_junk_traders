@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="data" type="com.sample_junk_traders.IndexData" -->
 <#import "lib/util.ftl" as u>
 <@u.page>
   <ul>

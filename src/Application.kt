@@ -1,22 +1,12 @@
 package com.sample_junk_traders
 
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.html.*
-import kotlinx.html.*
-import kotlinx.css.*
-import freemarker.cache.*
-import freemarker.ext.ant.FreemarkerXmlTask
 import io.ktor.freemarker.*
-import io.ktor.content.*
-import io.ktor.http.content.*
-import io.ktor.sessions.*
-import io.ktor.features.*
-import io.ktor.auth.*
 import io.ktor.http.cio.websocket.*
+import io.ktor.http.content.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -24,8 +14,6 @@ import kotlinx.coroutines.launch
 import kweb.*
 import kweb.state.KVar
 import kweb.state.render
-import kotlin.time.Duration
-import kotlin.time.DurationUnit
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -74,16 +62,22 @@ fun Application.module() {
         }
 
         get("/delayr") {
-            call.respondKweb {
-                doc.body {
-                    val name = KVar("Loading")
-                    GlobalScope.launch {
-                        delay(5000L)
-                        name.value = "Mary Poppins"
-                    }
-                    h1().text(name.map{ "The name is $it" })
-                }
+            val name = KVar("Loading")
+            GlobalScope.launch {
+                delay(2000L)
+                name.value = "Mary Poppins"
             }
+//            val name = KVar("Loading")
+//            GlobalScope.launch {
+//                delay(3000L)
+//                name.value = "Mary Poppins"
+//            }
+            call.respond(FreeMarkerContent("delayed.ftl", mapOf("message" to name)))
+//            call.respondKweb {
+//                doc.body {
+//                    h1().text(name)
+//                }
+//            }
         }
 
         get("/some-stuff"){
