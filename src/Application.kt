@@ -18,6 +18,9 @@ import io.ktor.features.*
 import io.ktor.auth.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kweb.*
 import kweb.state.KVar
 import kweb.state.render
@@ -66,6 +69,19 @@ fun Application.module() {
                             p().text(name.map { "Hello $it" })
                         }
                     }
+                }
+            }
+        }
+
+        get("/delayr") {
+            call.respondKweb {
+                doc.body {
+                    val name = KVar("Loading")
+                    GlobalScope.launch {
+                        delay(5000L)
+                        name.value = "Mary Poppins"
+                    }
+                    h1().text(name.map{ "The name is $it" })
                 }
             }
         }
